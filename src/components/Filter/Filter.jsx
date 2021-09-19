@@ -1,7 +1,9 @@
-import PropTypes from "prop-types";
-import { StyledInput, StyledLabel } from "./StyledFilterComponents";
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { StyledInput, StyledLabel } from './StyledFilterComponents';
+import * as filterActions from '../../redux/filter/filter-actions';
 
-const Filter = ({ onFilterChange, filter, disabled }) => {
+const Filter = ({ onFilterChange, contacts: { filter }, disabled }) => {
   return (
     <div>
       <StyledLabel>
@@ -24,4 +26,14 @@ Filter.propTypes = {
   filter: PropTypes.string,
 };
 
-export default Filter;
+const mapStateToProps = (state) => ({
+  contacts: {
+    filter: state.contacts.filter,
+  },
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onFilterChange: (event) => dispatch(filterActions.SET(event.target.value)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);

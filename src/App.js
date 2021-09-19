@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Form from './components/Form/Form';
 import Contacts from './components/Contacts/Contacts';
 import Filter from './components/Filter/Filter';
-import { ToastContainer, toast } from 'react-toastify';
-import { v4 as uuidv4 } from 'uuid';
-import { StyledApp, StyledBanner } from './components/AppComponents/AppComponents';
+import { ToastContainer } from 'react-toastify';
+
+import { StyledApp } from './components/AppComponents/AppComponents';
 import { connect } from 'react-redux';
 import * as itemsActions from './redux/items/items-actions';
 import * as filterActions from './redux/filter/filter-actions';
@@ -12,7 +12,7 @@ import * as filterActions from './redux/filter/filter-actions';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App({ contacts: { items, filter }, addMultiplyContacts }) {
-  //#region class methods
+  //#region methods
   useEffect(() => {
     const contactsFromLocalStorage = JSON.parse(localStorage.getItem('contacts'));
 
@@ -31,8 +31,7 @@ function App({ contacts: { items, filter }, addMultiplyContacts }) {
     <StyledApp>
       <Form />
       <Filter value={filter} disabled={items.length ? false : true} />
-
-      {items.length === 0 ? <StyledBanner>No contacts...</StyledBanner> : <Contacts />}
+      <Contacts />
       <ToastContainer />
     </StyledApp>
   );
@@ -47,10 +46,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // addNewContact: (contact) => dispatch(itemsActions.ADD(contact)),
     addMultiplyContacts: (contactsList) => dispatch(itemsActions.ADD_MUTIPLY_CONTACTS(contactsList)),
-    // removeSingleContact: (contact) => dispatch(itemsActions.REMOVE(contact)),
-    // removeAllContacts: () => dispatch(itemsActions.REMOVE_ALL()),
     clearFilter: () => dispatch(filterActions.CLEAR()),
     setFilter: (text) => dispatch(filterActions.SET(text)),
   };
