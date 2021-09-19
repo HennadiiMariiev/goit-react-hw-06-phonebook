@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 
 import { StyledApp } from './components/AppComponents/AppComponents';
 import { connect } from 'react-redux';
-import * as itemsActions from './redux/items/items-actions';
+import { ADD_MUTIPLY_CONTACTS } from './redux/items/items-actions';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -44,7 +44,7 @@ const mapStateToProps = ({ contacts: { items } }) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addMultiplyContacts: (contactsList) => dispatch(itemsActions.ADD_MUTIPLY_CONTACTS(contactsList)),
+    addMultiplyContacts: (contactsList) => dispatch(ADD_MUTIPLY_CONTACTS(contactsList)),
   };
 };
 

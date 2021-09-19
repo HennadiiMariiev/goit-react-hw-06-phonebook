@@ -9,7 +9,7 @@ import {
   StyledButton as StyledPrimaryButton,
 } from './StyledFormComponents';
 import { connect } from 'react-redux';
-import * as itemsAction from '../../redux/items/items-actions';
+import { ADD } from '../../redux/items/items-actions';
 import { toastMessage } from './form-helper';
 
 const useInput = (input) => {
@@ -60,9 +60,7 @@ function Form({ onNewContactAdd, contacts: { items } }) {
     setNumber('');
   };
 
-  const isNameInContacts = (searchName) => {
-    return items.find(({ name }) => name === searchName);
-  };
+  const isNameInContacts = (searchName) => items.find(({ name }) => name === searchName);
 
   const submitNewContact = (event) => {
     event.preventDefault();
@@ -130,7 +128,7 @@ const mapStateToProps = ({ contacts: { items, filter } }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onNewContactAdd: (name, number) => dispatch(itemsAction.ADD(name, number)),
+  onNewContactAdd: (name, number) => dispatch(ADD(name, number)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Form);

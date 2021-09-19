@@ -14,7 +14,7 @@ import { StyledBanner } from '../AppComponents/AppComponents';
 
 import { StyledButton as StyledPrimaryButton } from '../Form/StyledFormComponents';
 import { connect } from 'react-redux';
-import * as itemsActions from '../../redux/items/items-actions';
+import { REMOVE, REMOVE_ALL } from '../../redux/items/items-actions';
 
 const Contacts = ({ contacts: { items }, removeSingleContact, removeAllContacts }) => {
   const makeContactsList = items.map(({ name, number, id }) => {
@@ -74,11 +74,9 @@ const mapStateToProps = ({ contacts: { items, filter } }) => ({
   },
 });
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    removeSingleContact: (event) => dispatch(itemsActions.REMOVE(event.target.value)),
-    removeAllContacts: () => dispatch(itemsActions.REMOVE_ALL()),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  removeSingleContact: (event) => dispatch(REMOVE(event.target.value)),
+  removeAllContacts: () => dispatch(REMOVE_ALL()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Contacts);

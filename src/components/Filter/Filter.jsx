@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { StyledInput, StyledLabel } from './StyledFilterComponents';
-import * as filterActions from '../../redux/filter/filter-actions';
+import { createReducer } from '@reduxjs/toolkit';
+import { setFilter } from '../../redux/filter/filter-actions';
+// import * as filterActions from '../../redux/filter/filter-actions';
 
 const Filter = ({ onFilterChange, contacts: { items, filter } }) => {
   return (
@@ -34,7 +36,7 @@ const mapStateToProps = ({ contacts: { items, filter } }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onFilterChange: (event) => dispatch(filterActions.SET(event.target.value)),
+  onFilterChange: (event) => dispatch(setFilter(event.target.value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);

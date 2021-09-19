@@ -1,6 +1,3 @@
-import { filterTypes } from './filter-types';
+import { createAction } from '@reduxjs/toolkit';
 
-export const SET = (text) => ({
-  type: filterTypes.SET,
-  payload: text,
-});
+export const setFilter = createAction('filter/set');
