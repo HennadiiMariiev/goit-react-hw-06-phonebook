@@ -21,6 +21,21 @@ const Contacts = ({ contacts: { items, filter }, removeSingleContact, removeAllC
   const [filteredContacts, setFilteredContacts] = useState([]);
 
   useEffect(() => {
+    const makeContactsList = (contacts) => {
+      return contacts.map(({ name, number, id }) => {
+        return (
+          <StyledItem key={id}>
+            <StyledName>{name}</StyledName>
+            <StyledNumber>{number}</StyledNumber>
+
+            <StyledButton onClick={removeSingleContact} value={id}>
+              Remove
+            </StyledButton>
+          </StyledItem>
+        );
+      });
+    };
+
     setFilteredContacts(() => {
       if (filter === '') {
         return makeContactsList(items);
@@ -31,22 +46,7 @@ const Contacts = ({ contacts: { items, filter }, removeSingleContact, removeAllC
 
       return makeContactsList(filteredContacts);
     });
-  }, [filter, items]);
-
-  const makeContactsList = (contacts) => {
-    return contacts.map(({ name, number, id }) => {
-      return (
-        <StyledItem key={id}>
-          <StyledName>{name}</StyledName>
-          <StyledNumber>{number}</StyledNumber>
-
-          <StyledButton onClick={removeSingleContact} value={id}>
-            Remove
-          </StyledButton>
-        </StyledItem>
-      );
-    });
-  };
+  }, [filter, items, removeSingleContact]);
 
   return (
     <StyledDiv>

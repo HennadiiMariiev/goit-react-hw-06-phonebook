@@ -1,1 +1,1 @@
-export const filterTypes = { CLEAR: 'filter/clear', SET: 'filter/set' };
+export const filterTypes = { SET: 'filter/set' };

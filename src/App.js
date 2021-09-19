@@ -7,7 +7,6 @@ import { ToastContainer } from 'react-toastify';
 import { StyledApp } from './components/AppComponents/AppComponents';
 import { connect } from 'react-redux';
 import * as itemsActions from './redux/items/items-actions';
-import * as filterActions from './redux/filter/filter-actions';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -19,7 +18,7 @@ function App({ contacts: { items, filter }, addMultiplyContacts }) {
     if (contactsFromLocalStorage) {
       addMultiplyContacts(contactsFromLocalStorage);
     }
-  }, []);
+  }, [addMultiplyContacts]);
 
   useEffect(() => {
     localStorage.setItem('contacts', JSON.stringify(items));
@@ -47,8 +46,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     addMultiplyContacts: (contactsList) => dispatch(itemsActions.ADD_MUTIPLY_CONTACTS(contactsList)),
-    clearFilter: () => dispatch(filterActions.CLEAR()),
-    setFilter: (text) => dispatch(filterActions.SET(text)),
   };
 };
 
