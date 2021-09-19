@@ -10,7 +10,7 @@ import * as itemsActions from './redux/items/items-actions';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-function App({ contacts: { items, filter }, addMultiplyContacts }) {
+function App({ contacts: { items }, addMultiplyContacts }) {
   //#region methods
   useEffect(() => {
     const contactsFromLocalStorage = JSON.parse(localStorage.getItem('contacts'));
@@ -29,17 +29,16 @@ function App({ contacts: { items, filter }, addMultiplyContacts }) {
   return (
     <StyledApp>
       <Form />
-      <Filter value={filter} disabled={items.length ? false : true} />
+      <Filter />
       <Contacts />
       <ToastContainer />
     </StyledApp>
   );
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = ({ contacts: { items } }) => ({
   contacts: {
-    items: state.contacts.items,
-    filter: state.contacts.filter,
+    items,
   },
 });
 

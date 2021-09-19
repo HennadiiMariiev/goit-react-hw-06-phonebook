@@ -122,10 +122,10 @@ Form.propTypes = {
   onNewContactAdd: PropTypes.func,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = ({ contacts: { items, filter } }) => ({
   contacts: {
-    items: state.contacts.items,
-    filter: state.contacts.filter,
+    items,
+    filter,
   },
 });
 

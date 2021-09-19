@@ -15,47 +15,28 @@ import { StyledBanner } from '../AppComponents/AppComponents';
 import { StyledButton as StyledPrimaryButton } from '../Form/StyledFormComponents';
 import { connect } from 'react-redux';
 import * as itemsActions from '../../redux/items/items-actions';
-import { useEffect, useState } from 'react';
 
-const Contacts = ({ contacts: { items, filter }, removeSingleContact, removeAllContacts }) => {
-  const [filteredContacts, setFilteredContacts] = useState([]);
-
-  useEffect(() => {
-    const makeContactsList = (contacts) => {
-      return contacts.map(({ name, number, id }) => {
-        return (
-          <StyledItem key={id}>
-            <StyledName>{name}</StyledName>
-            <StyledNumber>{number}</StyledNumber>
-
-            <StyledButton onClick={removeSingleContact} value={id}>
-              Remove
-            </StyledButton>
-          </StyledItem>
-        );
-      });
-    };
-
-    setFilteredContacts(() => {
-      if (filter === '') {
-        return makeContactsList(items);
-      }
-
-      const searchStr = filter.toLowerCase();
-      const filteredContacts = items.filter((contact) => contact.name.toLowerCase().includes(searchStr));
-
-      return makeContactsList(filteredContacts);
-    });
-  }, [filter, items, removeSingleContact]);
+const Contacts = ({ contacts: { items }, removeSingleContact, removeAllContacts }) => {
+  const makeContactsList = items.map(({ name, number, id }) => {
+    return (
+      <StyledItem key={id}>
+        <StyledName>{name}</StyledName>
+        <StyledNumber>{number}</StyledNumber>
+        <StyledButton onClick={removeSingleContact} value={id}>
+          Remove
+        </StyledButton>
+      </StyledItem>
+    );
+  });
 
   return (
     <StyledDiv>
-      {filteredContacts.length === 0 ? (
+      {items.length === 0 ? (
         <StyledBanner>No contacts...</StyledBanner>
       ) : (
         <>
           <StyledSubTitle>Contacts</StyledSubTitle>
-          <StyledList>{filteredContacts}</StyledList>
+          <StyledList>{makeContactsList}</StyledList>
           <StyledPrimaryButton onClick={removeAllContacts} style={{ backgroundColor: '#FAFAFA' }}>
             Remove all
           </StyledPrimaryButton>
@@ -76,10 +57,20 @@ Contacts.propTypes = {
   ),
 };
 
-const mapStateToProps = (state) => ({
+const applyFilter = (items, filter) => {
+  if (filter === '') {
+    return items;
+  }
+
+  const searchStr = filter.toLowerCase();
+  const filteredContacts = items.filter((contact) => contact.name.toLowerCase().includes(searchStr));
+  return filteredContacts;
+};
+
+const mapStateToProps = ({ contacts: { items, filter } }) => ({
   contacts: {
-    items: state.contacts.items,
-    filter: state.contacts.filter,
+    items: applyFilter(items, filter),
+    filter,
   },
 });
 

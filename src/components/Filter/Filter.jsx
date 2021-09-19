@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { StyledInput, StyledLabel } from './StyledFilterComponents';
 import * as filterActions from '../../redux/filter/filter-actions';
 
-const Filter = ({ onFilterChange, contacts: { filter }, disabled }) => {
+const Filter = ({ onFilterChange, contacts: { items, filter } }) => {
   return (
     <div>
       <StyledLabel>
@@ -14,7 +14,7 @@ const Filter = ({ onFilterChange, contacts: { filter }, disabled }) => {
           placeholder="Please, type search name"
           value={filter}
           onChange={onFilterChange}
-          disabled={disabled}
+          disabled={items.length ? false : true}
         />
       </StyledLabel>
     </div>
@@ -26,9 +26,10 @@ Filter.propTypes = {
   filter: PropTypes.string,
 };
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = ({ contacts: { items, filter } }) => ({
   contacts: {
-    filter: state.contacts.filter,
+    items,
+    filter,
   },
 });
 
