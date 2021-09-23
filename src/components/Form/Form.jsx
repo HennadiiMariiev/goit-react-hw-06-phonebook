@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState, useRef } from "react";
+import PropTypes from "prop-types";
 
 import {
   StyledForm,
@@ -7,13 +7,16 @@ import {
   StyledLable,
   StyledInput,
   StyledButton as StyledPrimaryButton,
-} from './StyledFormComponents';
-import { connect } from 'react-redux';
-import { ADD } from '../../redux/items/items-actions';
-import { toastMessage } from './form-helper';
+} from "./StyledFormComponents";
+import { connect } from "react-redux";
+import { ADD } from "../../redux/items/items-actions";
+import { toastMessage } from "./form-helper";
+import { useSelector } from "react-redux";
+import { getItems } from "../../redux/items/items-selectors";
+import { useDispatch } from "react-redux";
 
 const useInput = (input) => {
-  const [value, setValue] = useState(() => '');
+  const [value, setValue] = useState(() => "");
 
   useEffect(() => {
     function isValidInput(input) {
@@ -23,16 +26,19 @@ const useInput = (input) => {
     }
 
     if (!isValidInput(input.current)) {
-      input.current.style = 'background-color: #f7d7d7;';
+      input.current.style = "background-color: #f7d7d7;";
     } else {
-      input.current.style = 'background-color: transparent;';
+      input.current.style = "background-color: transparent;";
     }
   }, [value, input]);
 
   return [value, setValue];
 };
 
-function Form({ onNewContactAdd, contacts: { items } }) {
+function Form() {
+  const items = useSelector(getItems);
+  const dispatch = useDispatch();
+
   const nameInput = useRef();
   const numberInput = useRef();
 
@@ -42,11 +48,11 @@ function Form({ onNewContactAdd, contacts: { items } }) {
   //#region methods
   const onInputChange = (event) => {
     switch (event.target.name) {
-      case 'name':
+      case "name":
         setName(event.target.value);
         break;
 
-      case 'number':
+      case "number":
         setNumber(event.target.value);
         break;
 
@@ -56,23 +62,24 @@ function Form({ onNewContactAdd, contacts: { items } }) {
   };
 
   const clearInputs = () => {
-    setName('');
-    setNumber('');
+    setName("");
+    setNumber("");
   };
 
-  const isNameInContacts = (searchName) => items.find(({ name }) => name === searchName);
+  const isNameInContacts = (searchName) =>
+    items.find(({ name }) => name === searchName);
 
   const submitNewContact = (event) => {
     event.preventDefault();
 
     if (isNameInContacts(name)) {
-      toastMessage('warn', `There is an existing contact with name "${name}"!`);
+      toastMessage("warn", `There is an existing contact with name "${name}"!`);
       return;
     }
 
-    onNewContactAdd(name, number);
+    dispatch(ADD(name, number));
 
-    toastMessage('success', `New contact "${name}" was added!`);
+    toastMessage("success", `New contact "${name}" was added!`);
 
     clearInputs();
   };
@@ -120,15 +127,15 @@ Form.propTypes = {
   onNewContactAdd: PropTypes.func,
 };
 
-const mapStateToProps = ({ contacts: { items, filter } }) => ({
-  contacts: {
-    items,
-    filter,
-  },
-});
+// const mapStateToProps = ({ contacts: { items, filter } }) => ({
+//   contacts: {
+//     items,
+//     filter,
+//   },
+// });
 
-const mapDispatchToProps = (dispatch) => ({
-  onNewContactAdd: (name, number) => dispatch(ADD(name, number)),
-});
+// const mapDispatchToProps = (dispatch) => ({
+//   onNewContactAdd: (name, number) => dispatch(ADD(name, number)),
+// });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Form);
+export default connect()(Form);

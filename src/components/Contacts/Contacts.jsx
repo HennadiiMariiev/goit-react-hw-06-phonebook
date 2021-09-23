@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 import {
   StyledItem,
@@ -8,26 +8,50 @@ import {
   StyledList,
   StyledSubTitle,
   StyledButton,
-} from './StyledContactsComponents';
+} from "./StyledContactsComponents";
 
-import { StyledBanner } from '../AppComponents/AppComponents';
+import { StyledBanner } from "../AppComponents/AppComponents";
 
-import { StyledButton as StyledPrimaryButton } from '../Form/StyledFormComponents';
-import { connect } from 'react-redux';
-import { REMOVE, REMOVE_ALL } from '../../redux/items/items-actions';
+import { StyledButton as StyledPrimaryButton } from "../Form/StyledFormComponents";
+import { connect } from "react-redux";
+import { REMOVE, REMOVE_ALL } from "../../redux/items/items-actions";
+import { useSelector } from "react-redux";
+import { getFilter, getItems } from "../../redux/items/items-selectors";
+import { useDispatch } from "react-redux";
 
-const Contacts = ({ contacts: { items }, removeSingleContact, removeAllContacts }) => {
-  const makeContactsList = items.map(({ name, number, id }) => {
-    return (
-      <StyledItem key={id}>
-        <StyledName>{name}</StyledName>
-        <StyledNumber>{number}</StyledNumber>
-        <StyledButton onClick={removeSingleContact} value={id}>
-          Remove
-        </StyledButton>
-      </StyledItem>
-    );
-  });
+const applyFilter = (items, filter) => {
+  if (filter === "") {
+    return items;
+  }
+
+  const searchStr = filter.toLowerCase();
+  const filteredContacts = items.filter((contact) =>
+    contact.name.toLowerCase().includes(searchStr)
+  );
+  return filteredContacts;
+};
+
+const Contacts = () => {
+  const items = useSelector(getItems);
+  const filter = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  const makeContactsList = applyFilter(items, filter).map(
+    ({ name, number, id }) => {
+      return (
+        <StyledItem key={id}>
+          <StyledName>{name}</StyledName>
+          <StyledNumber>{number}</StyledNumber>
+          <StyledButton
+            onClick={(event) => dispatch(REMOVE(event.target.value))}
+            value={id}
+          >
+            Remove
+          </StyledButton>
+        </StyledItem>
+      );
+    }
+  );
 
   return (
     <StyledDiv>
@@ -37,7 +61,10 @@ const Contacts = ({ contacts: { items }, removeSingleContact, removeAllContacts 
         <>
           <StyledSubTitle>Contacts</StyledSubTitle>
           <StyledList>{makeContactsList}</StyledList>
-          <StyledPrimaryButton onClick={removeAllContacts} style={{ backgroundColor: '#FAFAFA' }}>
+          <StyledPrimaryButton
+            onClick={() => dispatch(REMOVE_ALL())}
+            style={{ backgroundColor: "#FAFAFA" }}
+          >
             Remove all
           </StyledPrimaryButton>
         </>
@@ -57,26 +84,16 @@ Contacts.propTypes = {
   ),
 };
 
-const applyFilter = (items, filter) => {
-  if (filter === '') {
-    return items;
-  }
+// const mapStateToProps = ({ contacts: { items, filter } }) => ({
+//   contacts: {
+//     items: applyFilter(items, filter),
+//     filter,
+//   },
+// });
 
-  const searchStr = filter.toLowerCase();
-  const filteredContacts = items.filter((contact) => contact.name.toLowerCase().includes(searchStr));
-  return filteredContacts;
-};
+// const mapDispatchToProps = (dispatch) => ({
+//   removeSingleContact: (event) => dispatch(REMOVE(event.target.value)),
+//   removeAllContacts: () => dispatch(REMOVE_ALL()),
+// });
 
-const mapStateToProps = ({ contacts: { items, filter } }) => ({
-  contacts: {
-    items: applyFilter(items, filter),
-    filter,
-  },
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  removeSingleContact: (event) => dispatch(REMOVE(event.target.value)),
-  removeAllContacts: () => dispatch(REMOVE_ALL()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
+export default connect()(Contacts);
